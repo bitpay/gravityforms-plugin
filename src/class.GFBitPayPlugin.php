@@ -497,13 +497,14 @@ function bitpay_callback() {
                     } else {
                     	$message = 'Your transaction has now been confirmed on the bitcoin network. You will receive another email when the transaction is complete.';
                     	$note = 'The payment has been received, and the transaction has been confirmed on the bitcoin network. This will be updated when the transaction has been completed.';
-						$wpdb->update(
+						$wpdb->insert(
 							$wpdb->prefix.'rg_lead_notes', 
 							array( 
-								'value' => $note
-							),
-							array(
-								'lead_id' => $leadId
+								'lead_id' => $leadId, 
+								'user_name' => 'BitPay',
+								'user_id' => 0,
+								'date_created' => date('Y-m-d H:i:s'),
+								'value' => $note,
 							)
 						);
                     }
@@ -522,13 +523,14 @@ function bitpay_callback() {
                     	wp_mail($email, 'Transaction Complete', $message);
                     }
                     $note = 'The transaction is now complete.';
-					$wpdb->update(
+					$wpdb->insert(
 						$wpdb->prefix.'rg_lead_notes', 
 						array( 
-							'value' => $note
-						),
-						array(
-							'lead_id' => $leadId
+							'lead_id' => $leadId, 
+							'user_name' => 'BitPay',
+							'user_id' => 0,
+							'date_created' => date('Y-m-d H:i:s'),
+							'value' => $note,
 						)
 					);
                     break;
