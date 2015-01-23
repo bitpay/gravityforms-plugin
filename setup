@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+echo $SHELL
+export DB_USER=$DB_USER
+export DB_PASS=$DB_PASS
+echo "Removing conflicting files..."
+rm -rf gravityforms-plugin
+rm -rf vendor
+rm -rf bin 
+
+if [ -e composer.lock ]
+then
+       echo "Running Composer update..."
+       composer update
+else
+       echo "Running Composer Install..."
+       composer install
+fi
+
+echo "Building BitPay Plugin Directory..."
+mkdir gravityforms-plugin
+mkdir gravityforms-plugin/lib
+cp -avr src/* gravityforms-plugin
+cp LICENSE gravityforms-plugin/
+cp README.md gravityforms-plugin/
+cp CHANGELOG gravityforms-plugin/
+cp -avr vendor/bitpay/php-client/src/* gravityforms-plugin/lib

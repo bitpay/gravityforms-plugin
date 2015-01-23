@@ -1,0 +1,19 @@
+
+.forms_page_gfbitpay-options #icon-gf_edit_forms {
+	background: transparent url(images/bitcoin.png) no-repeat;
+}
+
+.gfbitpay_recurring_complex .gf_hidden {
+	display: none;
+}
+
+.no-js #gfbitpay-opt-admin-stored-beagle,
+.no-js #gfbitpay-opt-admin-stored-test {
+	display: none;
+}
+
+#gfbitpay-opt-admin-stored-beagle,
+#gfbitpay-opt-admin-stored-test {
+	color: #c00;
+	font-weight: bold;
+}

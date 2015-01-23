@@ -1,0 +1,30 @@
+/* default styling for BitPay plugin custom fields */
+
+.gform_wrapper .ginput_complex .gfbitpay_recurring_left {
+	display:inline-block;
+	clear:none;
+	width:20%;
+}
+
+.gform_wrapper .ginput_complex .gfbitpay_recurring_left.gfbitpay_recurring_date {
+	width:24%;
+}
+
+.gform_wrapper .ginput_complex .gfbitpay_recurring_left input,
+.gform_wrapper .ginput_complex .gfbitpay_recurring_left select {
+	width: 100px !important;
+	margin-left:0px ! important;
+}
+
+.gform_wrapper.gf_browser_chrome .ginput_complex .gfbitpay_recurring_left select {
+	padding: 2px 0px;
+	margin-bottom: 2px;
+}
+
+.gform_wrapper .gfbitpay_recurring_complex img.ui-datepicker-trigger {
+    vertical-align: middle;
+}
+
+.ui-datepicker-next label, .ui-datepicker-prev label {
+	display: none;
+}
