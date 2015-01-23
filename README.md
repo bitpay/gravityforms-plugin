@@ -39,6 +39,16 @@ After the plugin is installed, click on Activate.
 ***WARNING*** It is good practice to backup your database before installing
 plugins. Please make sure you create backups.
 
+***NOTE*** Your Maximum File Upload Size located inside your php.ini may prevent you from uploading the plugin. If this is the case just extract the contents of the Release into your Wordpress's wp-content/plugins folder.
+
+## From source code
+
+Run the following command to build the plugin folder:
+```
+./setup
+```
+Copy and paste this file into your Wordpress's wp-content/plugins folder
+
 # Configuration
 
 Configuration can be done using the Administrator section of Wordpress.
