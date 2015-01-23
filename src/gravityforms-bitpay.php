@@ -33,6 +33,22 @@ http://www.gravityhelp.com/documentation/page/Gform_enable_credit_card_field
 http://www.gravityhelp.com/documentation/page/Form_Object
 http://www.gravityhelp.com/documentation/page/Entry_Object
 */
+register_activation_hook(__FILE__,'gravityforms_bitpay_failed_requirements');
+
+function br_trigger_error($message, $errno) {
+ 
+    if(isset($_GET['action']) && $_GET['action'] == 'error_scrape') {
+ 
+        echo '<strong>' . $message . '</strong>';
+ 
+        exit;
+ 
+    } else {
+ 
+        trigger_error($message, $errno);
+ 
+    }
+}
 
 if (!defined('GFBITPAY_PLUGIN_ROOT')) {
 	define('GFBITPAY_PLUGIN_ROOT', dirname(__FILE__) . '/');
@@ -73,5 +89,28 @@ function gfbitpay_autoload($class_name) {
 }
 spl_autoload_register('gfbitpay_autoload');
 
+function gravityforms_bitpay_failed_requirements()
+{
+    global $wp_version;
+    $errors = array();
+    // PHP 5.4+ required
+    if (true === version_compare(PHP_VERSION, '5.4.0', '<')) {
+       $errors[] = 'Your PHP version is too old. The BitPay payment plugin requires PHP 5.4 or higher to function. Please contact your web server administrator for assistance.';
+    }
+    // Wordpress 3.9+ required
+    if (true === version_compare($wp_version, '4.0', '<')) {
+        $errors[] = 'Your WordPress version is too old. The BitPay payment plugin requires Wordpress 3.9 or higher to function. Please contact your web server administrator for assistance.';
+    }
+    // GMP or BCMath required
+    if (false === extension_loaded('gmp') && false === extension_loaded('bcmath')) {
+        $errors[] = 'The BitPay payment plugin requires the GMP or BC Math extension for PHP in order to function. Please contact your web server administrator for assistance.';
+    }
+    if (false === empty($errors)) {
+    	$imploded = implode("<br><br>\n", $errors);
+    	br_trigger_error($imploded, E_USER_ERROR);
+    } else {
+        return false;
+    }
+}
 // instantiate the plug-in
 GFBitPayPlugin::getInstance();
