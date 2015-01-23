@@ -20,6 +20,7 @@ echo "Building BitPay Plugin Directory..."
 mkdir bitpay-gravityforms-plugin
 mkdir bitpay-gravityforms-plugin/lib
 cp -avr src/* bitpay-gravityforms-plugin
+cp -avr vendor/* bitpay-gravityforms-plugin/lib
 cp LICENSE bitpay-gravityforms-plugin/
 cp README.md bitpay-gravityforms-plugin/
 cp CHANGELOG bitpay-gravityforms-plugin/

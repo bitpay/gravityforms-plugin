@@ -69,7 +69,7 @@ function gfbitpay_autoload($class_name) {
 		require GFBITPAY_PLUGIN_ROOT . $classMap[$class_name];
 	}
 
-	require_once __DIR__ . '/php-bitpay-client/vendor/autoload.php';
+	require_once __DIR__ . '/lib/autoload.php';
 }
 spl_autoload_register('gfbitpay_autoload');
 
