@@ -47,7 +47,7 @@ Run the following command to build the plugin folder:
 ```
 ./setup
 ```
-Copy and paste this file into your Wordpress's wp-content/plugins folder
+Copy and paste the bitpay-gravityforms-plugin folder into your Wordpress's wp-content/plugins folder
 
 # Configuration
 
