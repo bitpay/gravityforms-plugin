@@ -30,7 +30,7 @@ clear.
 
 ## From Downloadable Archive
 
-Visit the [Releases](https://github.com/bitpay/gravityforms-plugin/releases) page of
+Visit the [Releases](https://github.com/bitpay/gravityforms-plugin/releases/latest) page of
 this repository and download the latest version. Once this is done, you can just
 go to Wordpress's Adminstration Panels > Plugins > Add New > Upload Plugin, select the downloaded archive and click Install Now.
 After the plugin is installed, click on Activate.
@@ -38,7 +38,7 @@ After the plugin is installed, click on Activate.
 ***WARNING*** It is good practice to backup your database before installing
 plugins. Please make sure you create backups.
 
-***NOTE*** Your Maximum File Upload Size located inside your php.ini may prevent you from uploading the plugin. If this is the case just extract the contents of the Release into your Wordpress's wp-content/plugins folder.
+***NOTE*** Your Maximum File Upload Size located inside your php.ini may prevent you from uploading the plugin if it is less than 2MB. If this is the case just extract the contents of the Release into your Wordpress's wp-content/plugins folder.
 
 ## From source code
 
