@@ -240,7 +240,13 @@ class GFBitPayPlugin {
 						break;
 				}
 			}
-			RGFormsModel::update_lead($entry);
+            if (class_exists('RGFormsModel') == true) {
+            	RGFormsModel::update_lead($entry);
+            } elseif (class_exists('GFAPI') == true) {
+            	GFAPI::update_entry($entry);
+            } else {
+            	throw new Exception("GFAPI or RGFormsModel won't update lead.");
+            }
 			// record entry's unique ID in database
 			$unique_id = RGFormsModel::get_form_unique_id($form['id']);
 
@@ -457,7 +463,13 @@ function bitpay_callback() {
                 case 'paid':
                     $lead['payment_status'] = "Processing";
                     $lead['payment_date'] = date('Y-m-d H:i:s');
-                    RGFormsModel::update_lead($lead);
+                    if (class_exists('RGFormsModel') == true) {
+                    	RGFormsModel::update_lead($lead);
+                    } elseif (class_exists('GFAPI') == true) {
+                    	GFAPI::update_entry($lead);
+                    } else {
+                    	throw new Exception("GFAPI or RGFormsModel won't update lead.");
+                    }
                     $message = 'Thank you! Your payment has been received, but the transaction has not been confirmed on the bitcoin network. You will receive another email when the transaction has been confirmed.';
                     $note = 'The payment has been received, but the transaction has not been confirmed on the bitcoin network. This will be updated when the transaction has been confirmed.';
                     if (!empty($email) == true){
@@ -480,7 +492,13 @@ function bitpay_callback() {
                 case 'confirmed':
                     $lead['payment_status'] = "Pending";
                     $lead['payment_date'] = date('Y-m-d H:i:s');
-                    RGFormsModel::update_lead($lead);
+                    if (class_exists('RGFormsModel') == true) {
+                    	RGFormsModel::update_lead($lead);
+                    } elseif (class_exists('GFAPI') == true) {
+                    	GFAPI::update_entry($lead);
+                    } else {
+                    	throw new Exception("GFAPI or RGFormsModel won't update lead.");
+                    }
                     if (get_option('bitpayTransactionSpeed') == 'high') {
                     	$message = 'Thank you! Your payment has been received, and the transaction has been confirmed on the bitcoin network. You will receive another email when the transaction is complete.';
 						$note = 'The payment has been received, and the transaction has been confirmed on the bitcoin network. This will be updated when the transaction has been completed.';
@@ -517,7 +535,13 @@ function bitpay_callback() {
                 case 'complete':
                     $lead["payment_status"] = 'Approved';
                     $lead["payment_date"] = date('Y-m-d H:i:s');
-                    RGFormsModel::update_lead($lead);
+                    if (class_exists('RGFormsModel') == true) {
+                    	RGFormsModel::update_lead($lead);
+                    } elseif (class_exists('GFAPI') == true) {
+                    	GFAPI::update_entry($lead);
+                    } else {
+                    	throw new Exception("GFAPI or RGFormsModel won't update lead.");
+                    }
                     $message = 'Your transaction is now complete! Thank you for using BitPay!';
                     if (!empty($email) == true){
                     	wp_mail($email, 'Transaction Complete', $message);
