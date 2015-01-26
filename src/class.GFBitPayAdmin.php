@@ -8,16 +8,16 @@
 /**
  * Class for admin screens
  */
-class GFBitPayAdmin {
-
+class GFBitPayAdmin
+{
     public $settingsURL;
-
     private $plugin;
 
     /**
      * @param GFBitPayPlugin $plugin
      */
-    public function __construct($plugin) {
+    public function __construct($plugin)
+    {
         $this->plugin = $plugin;
 
         // handle change in settings pages
@@ -57,14 +57,16 @@ class GFBitPayAdmin {
      * test whether GravityForms plugin is installed and active
      * @return boolean
      */
-    public static function isGfActive() {
+    public static function isGfActive()
+    {
         return class_exists('RGForms');
     }
 
     /**
      * handle admin init action
      */
-    public function adminInit() {
+    public function adminInit()
+    {
         if (true === isset($_GET['page'])) {
             switch ($_GET['page']) {
                 case 'gf_settings':
@@ -80,14 +82,16 @@ class GFBitPayAdmin {
     /**
      * only output our stylesheet if this is our admin page
      */
-    public function enqueueScripts() {
+    public function enqueueScripts()
+    {
         wp_enqueue_style('gfbitpay-admin', $this->plugin->urlBase . 'style-admin.css', false, GFBITPAY_PLUGIN_VERSION);
     }
 
     /**
      * show admin messages
      */
-    public function actionAdminNotices() {
+    public function actionAdminNotices()
+    {
         if (self::isGfActive() == false) {
             $this->plugin->showError('Gravity Forms BitPay Payments requires <a href="http://www.gravityforms.com/">Gravity Forms</a> to be installed and activated.');
         }
@@ -96,7 +100,8 @@ class GFBitPayAdmin {
     /**
      * action hook for adding plugin action links
      */
-    public function addPluginActionLinks($links) {
+    public function addPluginActionLinks($links)
+    {
         // add settings link, but only if GravityForms plugin is active
         if (self::isGfActive() == true) {
             $settings_link = sprintf('<a href="%s">%s</a>', $this->settingsURL, __('Settings'));
@@ -109,7 +114,8 @@ class GFBitPayAdmin {
     /**
     * action hook for adding plugin details links
     */
-    public static function addPluginDetailsLinks($links, $file) {
+    public static function addPluginDetailsLinks($links, $file)
+    {
         if (true === isset($file) && $file == GFBITPAY_PLUGIN_NAME) {
             $links[] = '<a href="https://support.bitpay.com">' . __('Get help') . '</a>';
             $links[] = '<a href="https://www.bitpay.com">' . __('Bitpay.com') . '</a>';
@@ -123,7 +129,8 @@ class GFBitPayAdmin {
      * @param int $form_id
      * @param array $lead
      */
-    public function gformEntryInfo($form_id, $lead) {
+    public function gformEntryInfo($form_id, $lead)
+    {
         if (true === isset($lead) && false === empty($lead)) {
             $payment_gateway = gform_get_meta($lead['id'], 'payment_gateway');
 
@@ -143,7 +150,8 @@ class GFBitPayAdmin {
     /**
      * action hook for processing admin menu item
      */
-    public function optionsAdmin() {
+    public function optionsAdmin()
+    {
         $admin = new GFBitPayOptionsAdmin($this->plugin, 'gfbitpay-options', $this->settingsURL);
 
         if (true === isset($admin) && false === empty($admin)) {
@@ -176,7 +184,7 @@ class GFBitPayAdmin {
             // execute SQL statement
             dbDelta($sql);
         } catch (\Exception $e) {
-            error_log('[Error] In Bitpay plugin, create_table() function on line ' . $e->getLine() . ', with the error "' . $e->getMessage() . '" .');
+            error_log('[Error] In GFBitPayAdmin::create_table() function on line ' . $e->getLine() . ', with the error "' . $e->getMessage() . '" .');
             throw $e;
         }
     }
