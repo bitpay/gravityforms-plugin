@@ -55,7 +55,7 @@ Configuration can be done using the Administrator section of Wordpress.
 Once Logged in, you will find the configuration settings under **Forms > Settings > BitPay Payments**.
 Alternatively, you can also get to the configuration settings via Plugins and clicking the Settings link for this plugin.
 
-![BitPay Settings](https://raw.githubusercontent.com/aleitner/aleitner.github.io/master/gravityforms/fullSettings.png "BitPay Settings")
+![BitPay Settings](https://raw.githubusercontent.com/aleitner/aleitner.github.io/master/gravityforms/fullSettings2.png "BitPay Settings")
 
 Here your will need to create a [pairing code](https://bitpay.com/api-tokens) using
 your BitPay merchant account. Once you have a Pairing Code, put the code in the
