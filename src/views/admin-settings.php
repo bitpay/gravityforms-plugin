@@ -16,8 +16,7 @@
                 <div id="bitpay_api_token_form">
                     <?php
                     	wp_enqueue_style('font-awesome', '//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css');
-			            // wp_enqueue_style('woocommerce-plugin', plugins_url('assets/css/style.css', __FILE__));
-			            // wp_enqueue_script('woocommerce-plugin', plugins_url('assets/js/pairing.js', __FILE__), array('jquery'), null, true);
+			            wp_enqueue_style('gravityforms-plugin', plugins_url('../assets/css/style.css', __FILE__));
 			            $pairing_form = file_get_contents(plugin_dir_url(__FILE__).'../templates/pairing.tpl');
 			            $token_format = file_get_contents(plugin_dir_url(__FILE__).'../templates/token.tpl');
                         if (true === empty(get_option('bitpayToken'))) {
@@ -132,6 +131,7 @@
         // Pairing failed
         else if (data && data.success === false) {
           $('.bitpay-pairing').show();
+          $('#message').remove();
           $('#gform_tab_group').before('<div id="message" class="error"><p><strong>Unable to pair with BitPay</strong></p></div>');
         }
         

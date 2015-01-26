@@ -12,7 +12,7 @@
 .bitpay-token--hidden {
 	display: none;
 }
-.bitpay-token--testnet {
+.bitpay-token--Testnet {
 	border-color: #cc0;
 }
 .bitpay-token__prop {
@@ -44,12 +44,12 @@
 	display: inline;
 	color: #0f0;
 }
-.bitpay-token--testnet .bitpay-token__logo:after {
+.bitpay-token--Testnet .bitpay-token__logo:after {
 	content: "Testnet";
 	color: #cc0;
 }
 .bitpay-token__revoke {
-	display: block;
+	display: inline-block;
 	float: right;
 	padding: 0.5em 0.75em;
 	color: #f00;
@@ -58,4 +58,7 @@
 	border: none;
 	background: transparent;
 	cursor: pointer;
+}
+.bitpay-pairing--hidden {
+	display: none;
 }
