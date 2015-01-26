@@ -1,22 +1,3 @@
-<?php
-
-if (is_null(get_option('bitpayToken')) == true || get_option('bitpayToken') == ''){
-	$paired = '';
-} else {
-	$revoke = '<input type="submit" id="revoke_keys" name="revokeKeys" value="Revoke" />';
-	$paired = '<div style="
-			border: 1px solid;  
-		    margin: 10px 0px;
-		    width: 295px;
-		    padding:5px 5px 5px 30px;  
-		    background-repeat: no-repeat;
-		    font: normal 100% Helvetica, Arial, sans-serif;
-		    color: #4F8A10;  
-		    background:#DFF2BF top left no-repeat;
-		    background-position: 5px 5px;">You are currently paired with <strong>'.get_option('bitpayNetwork').
-		    '</strong> '.$revoke.'</div>';
-}
-?>
 <div class="wrap">
 <h3>BitPay Payments</h3>
 <p style="text-align: left;">
@@ -29,14 +10,28 @@ if (is_null(get_option('bitpayToken')) == true || get_option('bitpayToken') == '
 <br/>
 <form action="<?php echo $this->scriptURL; ?>" method="post" id="bitpay-settings-form">
 	<table class="form-table">
-		<ul>
-			<li><?php echo $paired ?></li>
-		</ul>
 		<tr>
-			<th>Pairing Code</th>
-			<td>
-				<input name="bitpayPairingCode" type="text" placeholder="Pairing Code" /><select name="bitpayNetwork"><option value="Livenet">Live</option><option value="Testnet">Test</option></select><input id="generate_keys" type="submit" name="generateKeys" value="Generate" />
-				<p><font size='2'>Generate Keys for pairing. This will overwrite your current keys and you will have to pair again.</font></p>
+			<th>API Token</th>
+			<td id='bitpay_api_token'>
+                <div id="bitpay_api_token_form">
+                    <?php
+                    	wp_enqueue_style('font-awesome', '//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css');
+			            // wp_enqueue_style('woocommerce-plugin', plugins_url('assets/css/style.css', __FILE__));
+			            // wp_enqueue_script('woocommerce-plugin', plugins_url('assets/js/pairing.js', __FILE__), array('jquery'), null, true);
+			            $pairing_form = file_get_contents(plugin_dir_url(__FILE__).'../templates/pairing.tpl');
+			            $token_format = file_get_contents(plugin_dir_url(__FILE__).'../templates/token.tpl');
+                        if (true === empty(get_option('bitpayToken'))) {
+                            echo sprintf($pairing_form, 'visible');
+                            echo sprintf($token_format, 'hidden', plugins_url('../assets/img/logo.png', __FILE__),'','');
+                        } else {
+                            echo sprintf($pairing_form, 'hidden');
+                            echo sprintf($token_format, get_option('bitpayNetwork'), plugins_url('../assets/img/logo.png', __FILE__), get_option('bitpayLabel'), get_option('bitpaySinKey'));
+                        }
+                    ?>
+                </div>
+                   <script type="text/javascript">
+                    var ajax_loader_url = '<?php echo plugins_url('../assets/img/ajax-loader.gif', __FILE__); ?>';
+                </script>
 			</td>
 		</tr>
 
@@ -67,33 +62,104 @@ if (is_null(get_option('bitpayToken')) == true || get_option('bitpayToken') == '
 </div>
 
 <script>
-(function($) {
 
-	function setVisibility() {
+/**
+ * @license Copyright 2011-2015 BitPay Inc., MIT License 
+ * see https://github.com/bitpay/woocommerce-bitpay/blob/master/LICENSE
+ */
 
-		function display(element, visible) {
-			if (visible)
-				element.css({display: "none"}).show(750);
-			else
-				element.hide();
-		}
-		
-	}
+'use strict';
 
-	$("#bitpay-settings-form").on("change", "input[name='bitpayPairingCode'],input[name='bitpayTransactionSpeed'],input[name='bitpayRedirectURL'],input[name='bitpayNetwork']", setVisibility);
+(function ( $ ) {
 
-	setVisibility();
+  $(function () {
 
-})(jQuery);
+    /**
+     * Update the API Token helper link on Network selection
+    */
 
-document.getElementById("generate_keys").addEventListener("click", pairFunction);
-document.getElementById("revoke_keys").addEventListener("click", revokeFunction);
+    $('#bitpay_api_token_form').on('change', '.bitpay-pairing__network', function (e) {
 
-function pairFunction() {
-    var result = confirm('Are you sure you wish to pair keys?'); return result; 
-}
-function revokeFunction() {
-    var result = confirm('Are you sure you wish to revoke your keys?'); return result; 
-}
+      // Helper urls
+      var Livenet = 'https://bitpay.com/api-tokens';
+      var Testnet = 'https://test.bitpay.com/api-tokens';
 
+      if ($('.bitpay-pairing__network').val() === 'Livenet') {
+        $('.bitpay-pairing__link').attr('href', Livenet).html(Livenet);
+      } else {
+        $('.bitpay-pairing__link').attr('href', Testnet).html(Testnet);
+      }
+
+    });
+
+    /**
+     * Try to pair with BitPay using an entered pairing code
+    */
+    $('#bitpay_api_token_form').on('click', '.bitpay-pairing__find', function (e) {
+
+      // Don't submit any forms or follow any links
+      e.preventDefault();
+
+      // Hide the pairing code form
+      $('.bitpay-pairing').hide();
+      $('.bitpay-pairing').after('<div class="bitpay-pairing__loading" style="width: 20em; text-align: center"><img src="'+ajax_loader_url+'"></div>');
+
+      // Attempt the pair with BitPay
+      $.post(ajaxurl, {
+        'action':       'bitpay_pair_code',
+        'pairing_code': $('.bitpay-pairing__code').val(),
+        'network':      $('.bitpay-pairing__network').val()
+      })
+      .done(function (data) {
+
+        $('.bitpay-pairing__loading').remove();
+
+        // Make sure the data is valid
+        if (data && data.sin && data.label) {
+
+          // Set the token values on the template
+          $('.bitpay-token').removeClass('bitpay-token--Livenet').removeClass('bitpay-token--Testnet').addClass('bitpay-token--'+data.network);
+          $('.bitpay-token__token-label').text(data.label);
+          $('.bitpay-token__token-sin').text(data.sin);
+
+          // Display the token and success notification
+          $('.bitpay-token').hide().removeClass('bitpay-token--hidden').fadeIn(500);
+          $('.bitpay-pairing__code').val('');
+          $('.bitpay-pairing__network').val('Livenet');
+          $('#message').remove();
+          $('#gform_tab_group').before('<div id="message" class="updated fade"><p><strong>You have been paired with your BitPay account!</strong></p></div>');
+        }
+        // Pairing failed
+        else if (data && data.success === false) {
+          $('.bitpay-pairing').show();
+          $('#gform_tab_group').before('<div id="message" class="error"><p><strong>Unable to pair with BitPay</strong></p></div>');
+        }
+        
+      });
+    });
+
+    // Revoking Token
+    $('#bitpay_api_token_form').on('click', '.bitpay-token__revoke', function (e) {
+
+      // Don't submit any forms or follow any links
+      e.preventDefault();
+
+      if (confirm('Are you sure you want to revoke the token?')) {
+        $.post(ajaxurl, {
+          'action': 'bitpay_revoke_token'
+        })
+        .always(function (data) {
+          $('.bitpay-token').fadeOut(500, function () {
+            $('.bitpay-pairing').removeClass('.bitpay-pairing--hidden').show();
+            $('#message').remove();
+            $('#gform_tab_group').before('<div id="message" class="updated fade"><p><strong>You have revoked your token!</strong></p></div>');
+          });
+        });
+      }
+
+    });
+
+  });
+
+}( jQuery ));
 </script>

@@ -114,3 +114,153 @@ function gravityforms_bitpay_failed_requirements()
 }
 // instantiate the plug-in
 GFBitPayPlugin::getInstance();
+
+add_action('wp_ajax_bitpay_pair_code', 'ajax_bitpay_pair_code');
+add_action('wp_ajax_bitpay_revoke_token', 'ajax_bitpay_revoke_token');
+
+function ajax_bitpay_pair_code()
+{
+
+    if (true === isset($_POST['pairing_code']) && trim($_POST['pairing_code']) !== '') {
+        // Validate the Pairing Code
+        $pairing_code = trim($_POST['pairing_code']);
+    } else {
+        wp_send_json_error("Pairing Code is required");
+        return;
+    }
+    if (!preg_match('/^[a-zA-Z0-9]{7}$/', $pairing_code)) {
+        wp_send_json_error("Invalid Pairing Code");
+        return;
+    }
+    // Validate the Network
+    $network = ($_POST['network'] == 'Livenet') ? 'Livenet' : 'Testnet';
+
+    try {
+        list($private, $public, $sin) = generate_keys();
+        $client = create_client($network, $public, $private);
+        list($token, $label)  = pairing($pairing_code, $client, $sin);
+        save_keys($token, $private, $public);
+        update_option('bitpayNetwork', $network);
+        wp_send_json(array('sin' => (string) $sin, 'label' => $label, 'network' => $network));
+    } catch (\Exception $e) {
+        error_log('[Error] In Bitpay plugin, pair_and_get_token() function on line ' . $e->getLine() . ', with the error "' . $e->getMessage() . '" .');
+        wp_send_json_error($e->getMessage());
+        return;
+    }
+}
+
+function ajax_bitpay_revoke_token()
+{
+    try {
+        delete_option('bitpayToken');
+        delete_option('bitpayPrivateKey');
+        delete_option('bitpayPublicKey');
+        delete_option('bitpaySinKey');
+        delete_option('bitpayNetwork');
+        wp_send_json(array('success'=>'Token Revoked!'));
+    } catch (\Exception $e) {
+        error_log('[Error] In Bitpay plugin, revoke_keys() function on line ' . $e->getLine() . ', with the error "' . $e->getMessage() . '" .');
+        throw $e;
+    }
+}
+
+/**
+ * GENERATING THE KEYS
+ */
+function generate_keys()
+{
+    $private = new \Bitpay\PrivateKey('/tmp/private.key');
+    if (true === empty($private)) {
+        throw new \Exception('An error occurred!  The BitPay plugin could not create a new PrivateKey object.');
+    }
+    $public = new \Bitpay\PublicKey('/tmp/public.key');
+    if (true === empty($public)) {
+        throw new \Exception('An error occurred!  The BitPay plugin could not create a new PublicKey object.');
+    }
+    $sin = new \Bitpay\SinKey('/tmp/sin.key');
+    if (true === empty($sin)) {
+        throw new \Exception('An error occurred!  The BitPay plugin could not create a new SinKey object.');
+    }
+    try {
+        // Generate Private Key values
+        $private->generate();
+        // Generate Public Key values
+        $public->setPrivateKey($private);
+        $public->generate();
+        // Generate Sin Key values
+        $sin->setPublicKey($public);
+        $sin->generate();
+    } catch (\Exception $e) {
+        error_log('[Error] In Bitpay plugin, generate_keys() function on line ' . $e->getLine() . ', with the error "' . $e->getMessage() . '" .');
+        throw $e;
+    }
+    return array($private, $public, $sin);
+}
+
+function create_client($network, $public, $private)
+{
+    // @var \Bitpay\Client\Client
+    $client = new \Bitpay\Client\Client();
+    if (true === empty($client)) {
+        throw new \Exception('An error occurred!  The BitPay plugin could not create a new Client object.');
+    }
+    //Set the network being paired with.
+    $networkClass = 'Bitpay\\Network\\'. $network;
+    if (false === class_exists($networkClass)) {
+        throw new \Exception('An error occurred!  The BitPay plugin could not find the "' . $networkClass . '" network.');
+    }
+    try {
+        $client->setNetwork(new $networkClass());
+        //Set Keys
+        $client->setPublicKey($public);
+        $client->setPrivateKey($private);
+        // Initialize our network adapter object for cURL
+        $client->setAdapter(new Bitpay\Client\Adapter\CurlAdapter());
+    } catch (\Exception $e) {
+        error_log('[Error] In Bitpay plugin, create_client() function on line ' . $e->getLine() . ', with the error "' . $e->getMessage() . '" .');
+        throw $e;
+    }
+    return $client;
+}
+
+function pairing($pairing_code, $client, $sin)
+{
+    //Create Token
+    $label = preg_replace('/[^a-zA-Z0-9 \-\_\.]/', '', get_bloginfo());
+    $label = substr('Gravity Forms - '.$label, 0, 59);
+    try {
+        // @var \Bitpay\TokenInterface
+        $token = $client->createToken(
+            array(
+                'id'          => (string) $sin,
+                'pairingCode' => $pairing_code,
+                'label'       => $label,
+            )
+        );
+        update_option('bitpayLabel', $label);
+        update_option('bitpaySinKey', (string) $sin);
+        return array($token, $label);
+    } catch (\Exception $e) {
+        $error = $e->getMessage();
+        error_log('[Error] In Bitpay plugin, pairing() function on line ' . $e->getLine() . ', with the error "' . $e->getMessage() . '" .');
+        throw $e;
+    }
+}
+
+function save_keys($token, $private, $public)
+{
+    try {
+        //Protect your data!
+        $mcrypt_ext  = new \Bitpay\Crypto\McryptExtension();
+        $fingerprint = sha1(sha1(__DIR__));
+        $fingerprint = substr($fingerprint, 0, 24);
+        //Setting values for database
+        update_option('bitpayPrivateKey', $mcrypt_ext->encrypt(base64_encode(serialize($private)), $fingerprint, '00000000'));
+        update_option('bitpayPublicKey', $mcrypt_ext->encrypt(base64_encode(serialize($public)), $fingerprint, '00000000'));
+        update_option('bitpayToken', $mcrypt_ext->encrypt(base64_encode(serialize($token)), $fingerprint, '00000000'));
+
+    } catch (\Exception $e) {
+        error_log('[Error] In Bitpay plugin, save_keys() function on line ' . $e->getLine() . ', with the error "' . $e->getMessage() . '" .');
+        throw $e;
+    }
+}

@@ -12,7 +12,7 @@
 .bitpay-token--hidden {
 	display: none;
 }
-.bitpay-token--Testnet {
+.bitpay-token--testnet {
 	border-color: #cc0;
 }
 .bitpay-token__prop {
@@ -44,7 +44,7 @@
 	display: inline;
 	color: #0f0;
 }
-.bitpay-token--Testnet .bitpay-token__logo:after {
+.bitpay-token--testnet .bitpay-token__logo:after {
 	content: "Testnet";
 	color: #cc0;
 }
@@ -58,23 +58,4 @@
 	border: none;
 	background: transparent;
 	cursor: pointer;
-}
-
-.bitpay-pairing--hidden {
-	display: none;
-}
-
-.gfbitpay_recurring_complex .gf_hidden {
-	display: none;
-}
-
-.no-js #gfbitpay-opt-admin-stored-beagle,
-.no-js #gfbitpay-opt-admin-stored-test {
-	display: none;
-}
-
-#gfbitpay-opt-admin-stored-beagle,
-#gfbitpay-opt-admin-stored-test {
-	color: #c00;
-	font-weight: bold;
 }
