@@ -5,7 +5,6 @@
 </p>
 <ul>
 	<li>Navigate to the BitPay <a href="https://bitpay.com/start">Sign-up page.</a></li>
-	<li>Get a Pairing Code at the BitPay <a href="https://bitpay.com/api-tokens">Tokens page</a></li>
 </ul>
 <br/>
 <form action="<?php echo $this->scriptURL; ?>" method="post" id="bitpay-settings-form">
