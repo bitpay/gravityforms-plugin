@@ -60,9 +60,11 @@ Alternatively, you can also get to the configuration settings via Plugins and cl
 Here your will need to create a [pairing code](https://bitpay.com/api-tokens) using
 your BitPay merchant account. Once you have a Pairing Code, put the code in the
 Pairing Code field:
+
 ![Pairing Code field](https://raw.githubusercontent.com/aleitner/aleitner.github.io/master/gravityforms/pairingCode2.png "Pairing Code field")
 
 On success, you'll receive a token:
+
 ![BitPay Token](https://raw.githubusercontent.com/aleitner/aleitner.github.io/master/gravityforms/paired2.png "Bitpay Token")
 
 ***NOTE*** Pairing Codes are only valid for a short period of time. If it expires
