@@ -56,7 +56,6 @@ class GFBitPayPlugin
         // do nothing if Gravity Forms isn't enabled
         if (true === class_exists('GFCommon')) {
             // hook into Gravity Forms to trap form submissions
-            add_filter('gform_pre_render', array($this, 'gformPreRenderSniff'));
             add_filter('gform_currency', array($this, 'gformCurrency'));
             add_filter('gform_validation', array($this, 'gformValidation'));
             add_action('gform_after_submission', array($this, 'gformAfterSubmission'), 10, 2);
@@ -441,7 +440,7 @@ function bitpay_callback()
     try {
         global $wpdb;
 
-        if (itrue === sset($_GET['bitpay_callback'])) {
+        if (true === isset($_GET['bitpay_callback'])) {
             $post = file_get_contents("php://input");
 
             if (true === empty($post)) {

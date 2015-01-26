@@ -63,7 +63,7 @@ class GFBitPayOptionsForm
     {
         $errmsg = '';
 
-        if (false === isset() || strlen($this->bitpayRedirectURL) <= 0) {
+        if (false === isset($this->bitpayRedirectURL) || strlen($this->bitpayRedirectURL) <= 0) {
             $errmsg .= "# Please enter a Redirect URL.<br/>\n";
         }
 
