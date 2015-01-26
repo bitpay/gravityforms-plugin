@@ -9,9 +9,7 @@
         }
     ],
     "require": {
-        "bitpay/php-client": "dev-master@dev",
-        "fabpot/php-cs-fixer": "@stable",
-        "phpunit/phpunit": "~3.7"
+        "bitpay/php-client": "dev-master@dev"
     },
     "require-dev": {
         "wp-cli/wp-cli": "*",
@@ -19,7 +17,9 @@
         "behat/mink": "1.4.*@stable",
         "behat/mink-extension": "*",
         "behat/mink-goutte-driver": "*",
-        "behat/mink-selenium2-driver": "*"
+        "behat/mink-selenium2-driver": "*",
+        "fabpot/php-cs-fixer": "@stable",
+        "phpunit/phpunit": "~3.7"
     },
     "minimum-stability": "stable",
     "config": {
