@@ -8,8 +8,8 @@
 /**
  * Class for managing form data
  */
-class GFBitPayFormData {
-    
+class GFBitPayFormData
+{
     public $price    = 0;
     public $total    = 0;
     public $shipping = 0;
@@ -34,7 +34,8 @@ class GFBitPayFormData {
      * initialise instance
      * @param array $form
      */
-    public function __construct(&$form) {
+    public function __construct(&$form)
+    {
         if (false === isset($form) || true === empty($form)) {
             error_log('[ERROR] In GFBitPayFormData::__construct(): Missing or invalid $form parameter.');
             throw new \Exception('An error occurred in the BitPay Payment plugin: Missing or invalid $form parameter in the GFBitPayFormData::__construct() function.');
@@ -54,7 +55,8 @@ class GFBitPayFormData {
      * load the form data we care about from the form array
      * @param array $form
      */
-    private function loadForm(&$form) {
+    private function loadForm(&$form)
+    {
         if (false === isset($form) || true === empty($form)) {
             error_log('[ERROR] In GFBitPayFormData::loadForm(): Missing or invalid $form parameter.');
             throw new \Exception('An error occurred in the BitPay Payment plugin: Missing or invalid $form parameter in the GFBitPayFormData::loadForm() function.');
@@ -141,7 +143,8 @@ class GFBitPayFormData {
      * extract the price from a product field, and multiply it by the quantity
      * @return float
      */
-    private static function getProductPrice($form, $field) {
+    private static function getProductPrice($form, $field)
+    {
         if (false === isset($form) || true === empty($form)) {
             error_log('[ERROR] In GFBitPayFormData::getProductPrice(): Missing or invalid $form parameter.');
             throw new \Exception('An error occurred in the BitPay Payment plugin: Missing or invalid $form parameter in the GFBitPayFormData::getProductPrice() function.');
@@ -226,7 +229,8 @@ class GFBitPayFormData {
      * extract the shipping amount from a shipping field
      * @return float
      */
-    private static function getShipping($form, $field) {
+    private static function getShipping($form, $field)
+    {
         if (false === isset($form) || true === empty($form)) {
             error_log('[ERROR] In GFBitPayFormData::getShipping(): Missing or invalid $form parameter.');
             throw new \Exception('An error occurred in the BitPay Payment plugin: Missing or invalid $form parameter in the GFBitPayFormData::getShipping() function.');
@@ -254,12 +258,13 @@ class GFBitPayFormData {
 
         return $shipping;
     }
-    
+
     /**
      * check whether we're on the last page of the form
      * @return boolean
      */
-    public function isLastPage() {
+    public function isLastPage()
+    {
         return $this->isLastPageFlag;
     }
 
