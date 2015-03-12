@@ -1,11 +1,25 @@
 {
-    "name": "bitpay/wpecommerce-plugin",
-    "description": "Plugin for wpecommerce",
+    "name": "bitpay/gravityforms",
+    "description": "BitPay payment plugin for gravityforms",
+    "type": "gravityforms-plugin",
+    "keywords": ["gravityforms","wordpress","plugin","payment","ecommerce","bitcoin","bitpay"],
     "license": "MIT",
+    "support": {
+        "email": "support@bitpay.com",
+        "issues": "https://github.com/bitpay/gravityforms-plugin/issues",
+        "source": "https://github.com/bitpay/gravityforms-plugin"
+    },
     "repositories": [
         {
             "type": "git",
             "url": "https://github.com/bitpay/php-bitpay-client.git"
+        }
+    ],
+    "authors": [
+        {
+            "name": "BitPay Integrations Development Team",
+            "email": "integrations@bitpay.com",
+            "homepage": "https://bitpay.com/integrations"
         }
     ],
     "require": {
