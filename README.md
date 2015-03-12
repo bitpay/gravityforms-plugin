@@ -2,6 +2,8 @@
 
 Bitcoin payment plugin for Gravity Forms using the bitpay.com service.
 
+[![Build Status](https://travis-ci.org/bitpay/gravityforms-plugin.svg)](https://travis-ci.org/bitpay/gravityforms-plugin)
+
 ## Quick Start Guide
 
 To get up and running with our plugin quickly, see the GUIDE here: https://github.com/bitpay/gravityforms-plugin/blob/master/GUIDE.md
