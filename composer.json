@@ -26,14 +26,15 @@
         "bitpay/php-client": "dev-master@dev"
     },
     "require-dev": {
-        "wp-cli/wp-cli": "*",
-        "behat/behat": "2.4.*@stable",
-        "behat/mink": "1.4.*@stable",
-        "behat/mink-extension": "*",
-        "behat/mink-goutte-driver": "*",
-        "behat/mink-selenium2-driver": "*",
-        "fabpot/php-cs-fixer": "@stable",
-        "phpunit/phpunit": "~3.7"
+        "require-dev": {
+        "phpmd/phpmd": "*",
+        "phpdocumentor/phpdocumentor": "*",
+        "phing/phing": "*",
+        "pdepend/pdepend" : "1.1.0",
+        "squizlabs/php_codesniffer": "*",
+        "phpunit/phpunit": "*",
+        "phploc/phploc": "*",
+        "phpunit/phpunit-skeleton-generator": "*"
     },
     "minimum-stability": "stable",
     "config": {
