@@ -9,12 +9,7 @@
         "issues": "https://github.com/bitpay/gravityforms-plugin/issues",
         "source": "https://github.com/bitpay/gravityforms-plugin"
     },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/bitpay/php-bitpay-client.git"
-        }
-    ],
+    "minimum-stability": "stable",
     "authors": [
         {
             "name": "BitPay Integrations Development Team",
@@ -26,7 +21,6 @@
         "bitpay/php-client": "dev-master@dev"
     },
     "require-dev": {
-        "require-dev": {
         "phpmd/phpmd": "*",
         "phpdocumentor/phpdocumentor": "*",
         "phing/phing": "*",
@@ -36,7 +30,6 @@
         "phploc/phploc": "*",
         "phpunit/phpunit-skeleton-generator": "*"
     },
-    "minimum-stability": "stable",
     "config": {
         "bin-dir": "bin/"
     }
