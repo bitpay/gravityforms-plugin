@@ -10,7 +10,7 @@ Author URI:  https://www.bitpay.com
 */
 
 /**
- * @license Copyright 2011-2014 BitPay Inc., MIT License 
+ * @license Copyright 2011-2014 BitPay Inc., MIT License
  * see https://github.com/bitpay/gravityforms-plugin/blob/master/LICENSE
  */
 
@@ -120,34 +120,41 @@ add_action('wp_ajax_bitpay_revoke_token', 'ajax_bitpay_revoke_token');
  */
 function ajax_bitpay_pair_code()
 {
-    if (true === isset($_POST['pairing_code']) && trim($_POST['pairing_code']) !== '') {
-        // Validate the Pairing Code
-        $pairing_code = trim($_POST['pairing_code']);
-    } else {
-        wp_send_json_error("Pairing Code is required");
-        return;
+    $nonce = $_POST['pairNonce'];
+    if ( ! wp_verify_nonce( $nonce, 'bitpay-pair-nonce' ) ) {
+        die ( 'Unauthorized!');
     }
+    if ( current_user_can( 'manage_options' ) ) {
+        if (true === isset($_POST['pairing_code']) && trim($_POST['pairing_code']) !== '') {
+            // Validate the Pairing Code
+            $pairing_code = trim($_POST['pairing_code']);
+        } else {
+            wp_send_json_error("Pairing Code is required");
+            return;
+        }
 
-    if (!preg_match('/^[a-zA-Z0-9]{7}$/', $pairing_code)) {
-        wp_send_json_error("Invalid Pairing Code");
-        return;
+        if (!preg_match('/^[a-zA-Z0-9]{7}$/', $pairing_code)) {
+            wp_send_json_error("Invalid Pairing Code");
+            return;
+        }
+
+        // Validate the Network
+        $network = ($_POST['network'] == 'Livenet') ? 'Livenet' : 'Testnet';
+
+        try {
+            list($private, $public, $sin) = generate_keys();
+            $client = create_client($network, $public, $private);
+            list($token, $label)  = pairing($pairing_code, $client, $sin);
+            save_keys($token, $private, $public);
+            update_option('bitpayNetwork', $network);
+            wp_send_json(array('sin' => (string) $sin, 'label' => $label, 'network' => $network));
+        } catch (\Exception $e) {
+            error_log('[Error] In gravityforms-bitpay.php ajax_bitpay_pair_code() function on line ' . $e->getLine() . ', with the error "' . $e->getMessage() . '" .');
+            wp_send_json_error($e->getMessage());
+            return;
+        }
     }
-
-    // Validate the Network
-    $network = ($_POST['network'] == 'Livenet') ? 'Livenet' : 'Testnet';
-
-    try {
-        list($private, $public, $sin) = generate_keys();
-        $client = create_client($network, $public, $private);
-        list($token, $label)  = pairing($pairing_code, $client, $sin);
-        save_keys($token, $private, $public);
-        update_option('bitpayNetwork', $network);
-        wp_send_json(array('sin' => (string) $sin, 'label' => $label, 'network' => $network));
-    } catch (\Exception $e) {
-        error_log('[Error] In gravityforms-bitpay.php ajax_bitpay_pair_code() function on line ' . $e->getLine() . ', with the error "' . $e->getMessage() . '" .');
-        wp_send_json_error($e->getMessage());
-        return;
-    }
+    exit;
 }
 
 /**
@@ -155,17 +162,24 @@ function ajax_bitpay_pair_code()
  */
 function ajax_bitpay_revoke_token()
 {
-    try {
-        delete_option('bitpayToken');
-        delete_option('bitpayPrivateKey');
-        delete_option('bitpayPublicKey');
-        delete_option('bitpaySinKey');
-        delete_option('bitpayNetwork');
-        wp_send_json(array('success'=>'Token Revoked!'));
-    } catch (\Exception $e) {
-        error_log('[Error] In gravityforms-bitpay.php ajax_bitpay_revoke_token() function on line ' . $e->getLine() . ', with the error "' . $e->getMessage() . '" .');
-        throw $e;
+    $nonce = $_POST['revokeNonce'];
+    if ( ! wp_verify_nonce( $nonce, 'bitpay-revoke-nonce' ) ) {
+        die ( 'Unauthorized!');
     }
+    if ( current_user_can( 'manage_options' ) ) {
+        try {
+            delete_option('bitpayToken');
+            delete_option('bitpayPrivateKey');
+            delete_option('bitpayPublicKey');
+            delete_option('bitpaySinKey');
+            delete_option('bitpayNetwork');
+            wp_send_json(array('success'=>'Token Revoked!'));
+        } catch (\Exception $e) {
+            error_log('[Error] In gravityforms-bitpay.php ajax_bitpay_revoke_token() function on line ' . $e->getLine() . ', with the error "' . $e->getMessage() . '" .');
+            throw $e;
+        }
+    }
+    exit;
 }
 
 /**
@@ -306,4 +320,3 @@ function save_keys($token, $private, $public)
         throw $e;
     }
 }
-
