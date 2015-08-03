@@ -18,7 +18,7 @@
 			            wp_enqueue_style('gravityforms-plugin', plugins_url('../assets/css/style.css', __FILE__));
 			            $pairing_form = file_get_contents(plugin_dir_url(__FILE__).'../templates/pairing.tpl');
 			            $token_format = file_get_contents(plugin_dir_url(__FILE__).'../templates/token.tpl');
-                        if (true === empty(get_option('bitpayToken'))) {
+                        if (false === get_option('bitpayToken')) {
                             echo sprintf($pairing_form, 'visible');
                             echo sprintf($token_format, 'hidden', plugins_url('../assets/img/logo.png', __FILE__),'','');
                         } else {
