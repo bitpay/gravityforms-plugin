@@ -18,6 +18,7 @@ To get up and running with our plugin quickly, see the GUIDE here: https://githu
 
 **BitPay Support:**
 
+* Last Version Tested: 1.8
 * [BitPay Labs](https://labs.bitpay.com/c/plugins/gravity-forms)
   * Post a question in our discussion forums
 * [GitHub Issues](https://github.com/bitpay/gravityforms-plugin/issues)
