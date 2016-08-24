@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @license Copyright 2011-2014 BitPay Inc., MIT License 
+ * @license Copyright 2011-2014 BitPay Inc., MIT License
  * see https://github.com/bitpay/gravityforms-plugin/blob/master/LICENSE
  */
 
@@ -35,7 +35,6 @@ class GFBitPayAdmin
         add_action('admin_init', array($this, 'adminInit'));
 
         // add GravityForms hooks
-        add_filter('gform_currency_setting_message', array($this, 'gformCurrencySettingMessage'));
         add_action("gform_entry_info", array($this, 'gformEntryInfo'), 10, 2);
 
         // hook for showing admin messages

@@ -18,7 +18,7 @@ To get up and running with our plugin quickly, see the GUIDE here: https://githu
 
 **BitPay Support:**
 
-* Last Version Tested: 1.8
+* Last Version Tested: 2.0.6
 * [GitHub Issues](https://github.com/bitpay/gravityforms-plugin/issues)
   * Open an issue if you are having issues with this plugin
 * [Support](https://help.bitpay.com)
@@ -60,7 +60,7 @@ Would you like to help with this project?  Great!  You don't have to be a develo
 
 If you *are* a developer wanting contribute an enhancement, bugfix or other patch to this project, please fork this repository and submit a pull request detailing your changes. We review all PRs!
 
-This open source project is released under the [MIT license](http://opensource.org/licenses/MIT) which means if you would like to use this project's code in your own project you are free to do so. 
+This open source project is released under the [MIT license](http://opensource.org/licenses/MIT) which means if you would like to use this project's code in your own project you are free to do so.
 
 ## License
 
