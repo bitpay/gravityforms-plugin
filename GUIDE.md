@@ -9,9 +9,9 @@ You must have a BitPay merchant account to use this plugin.  It's free to [sign-
 
 ## Server Requirements
 
-* [Wordpress](https://wordpress.org/about/requirements/) >= 3.9 (Older versions may work, but we do not test against those)
+* [Wordpress](https://wordpress.org/about/requirements/) >= 4.6 (Older versions may work, but we do not test against those)
 * [GMP](http://php.net/manual/en/book.gmp.php) or [BCMath](http://php.net/manual/en/book.bc.php) You may have to install GMP as most servers do not come with it, but generally BCMath is already included.
-* [GravityForms](http://www.gravityhelp.com/) >= 1.8.4 
+* [GravityForms](http://www.gravityhelp.com/) >= 2.0.6
 * [mcrypt](http://us2.php.net/mcrypt)
 * [OpenSSL](http://us2.php.net/openssl) Must be compiled with PHP
 * PHP >= 5.4

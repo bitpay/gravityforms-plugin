@@ -4,7 +4,7 @@
 Plugin Name: Gravity Forms BitPay Payments
 Plugin URI:  https://github.com/bitpay/gravityforms-plugin
 Description: Integrates Gravity Forms with BitPay payment gateway.
-Version:     2.0.0
+Version:     2.0.2
 Author:      Rich Morgan & Alex Leitner (integrations@bitpay.com)
 Author URI:  https://www.bitpay.com
 */
@@ -44,7 +44,7 @@ if (false === defined('GFBITPAY_PLUGIN_ROOT')) {
     if (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) {
         define('GFBITPAY_PLUGIN_VERSION', time());
     } else {
-        define('GFBITPAY_PLUGIN_VERSION', '2.0.0');
+        define('GFBITPAY_PLUGIN_VERSION', '2.0.2');
     }
 
     // custom fields
