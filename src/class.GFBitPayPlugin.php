@@ -10,15 +10,24 @@
  */
 class GFBitPayException extends Exception {}
 class GFBitPayCurlException extends Exception {}
+GFForms::include_payment_addon_framework();
 
 /**
  * Class for managing the plugin
  */
-class GFBitPayPlugin
+
+class GFBitPayPlugin extends GFPaymentAddOn 
 {
+    protected $_version = "2.3.7";
+    protected $_min_gravityforms_version = '1.9';
+    protected $_slug = 'bitpay-gravityforms-plugin';
+    protected $_path = 'bitpay-gravityforms-plugin/gravityforms-bitpay.php';
+    protected $_full_path = __FILE__;
+    protected $_title = 'Gravity Forms BitPay';
+    protected $_short_title = 'BitPay';
     public $urlBase;                  // string: base URL path to files in plugin
     public $options;                  // array of plugin options
-
+    private static $instance = null;
     protected $txResult = null;       // BitPay transaction results
 
     /**
@@ -26,25 +35,33 @@ class GFBitPayPlugin
      *
      * @return GFBitPayPlugin
      */
-    public static function getInstance()
+    public static function get_instance()
     {
-        static $instance = NULL;
-
-        if (true === empty($instance)) {
+        if (true === empty(self::$instance)) {
             $instance = new self();
         }
-
         return $instance;
+    }
+   
+      public function option_choices() {
+        return false;
+    }
+
+    public function feed_settings_fields() {
+        $default_settings = parent::feed_settings_fields();
+        //hide default display of setup fee
+        $default_settings = $this->remove_field('billingInformation', $default_settings);
+        return $default_settings;
     }
 
     /**
      * Initialize plugin
      */
-    private function __construct()
+    public function __construct()
     {
         // record plugin URL base
         $this->urlBase = plugin_dir_url(__FILE__);
-
+        parent::init();
         add_action('init', array($this, 'init'));
     }
 
@@ -62,7 +79,7 @@ class GFBitPayPlugin
             add_filter('gform_custom_merge_tags', array($this, 'gformCustomMergeTags'), 10, 4);
             add_filter('gform_replace_merge_tags', array($this, 'gformReplaceMergeTags'), 10, 7);
         }
-
+      
         if (is_admin() == true) {
             // kick off the admin handling
             new GFBitPayAdmin($this);
@@ -390,7 +407,7 @@ class GFBitPayPlugin
      */
     public static function getCustomerIP()
     {
-        $plugin = self::getInstance();
+        $plugin = self::get_instance();
 
         // check for remote address, ignore all other headers as they can be spoofed easily
         if (true === isset($_SERVER['REMOTE_ADDR']) && self::isIpAddress($_SERVER['REMOTE_ADDR'])) {
