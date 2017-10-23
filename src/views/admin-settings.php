@@ -16,9 +16,8 @@
                     <?php
                     	wp_enqueue_style('font-awesome', '//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css');
 			            wp_enqueue_style('gravityforms-plugin', plugins_url('../assets/css/style.css', __FILE__));
-			            $pairing_form = file_get_contents(plugin_dir_url(__FILE__).'../templates/pairing.tpl');
-			            $token_format = file_get_contents(plugin_dir_url(__FILE__).'../templates/token.tpl');
-                        if (false === get_option('bitpayToken')) {
+        			    $pairing_form = file_get_contents(__DIR__.'/../templates/pairing.tpl');
+                                    $token_format = file_get_contents(__DIR__.'/../templates/token.tpl');                        if (false === get_option('bitpayToken')) {
                             echo sprintf($pairing_form, 'visible');
                             echo sprintf($token_format, 'hidden', plugins_url('../assets/img/logo.png', __FILE__),'','');
                         } else {
