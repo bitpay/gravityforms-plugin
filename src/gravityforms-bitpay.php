@@ -4,7 +4,7 @@
 Plugin Name: Gravity Forms BitPay Payments
 Plugin URI:  https://github.com/bitpay/gravityforms-plugin
 Description: Integrates Gravity Forms with BitPay payment gateway.
-Version:     2.0.2
+Version:     2.0.3
 Author:      Rich Morgan & Alex Leitner (integrations@bitpay.com)
 Author URI:  https://www.bitpay.com
 */
@@ -44,7 +44,7 @@ if (false === defined('GFBITPAY_PLUGIN_ROOT')) {
     if (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) {
         define('GFBITPAY_PLUGIN_VERSION', time());
     } else {
-        define('GFBITPAY_PLUGIN_VERSION', '2.0.2');
+        define('GFBITPAY_PLUGIN_VERSION', '2.0.3');
     }
 
     // custom fields
@@ -108,9 +108,27 @@ function gravityforms_bitpay_failed_requirements()
         return false;
     }
 }
+add_action( 'gform_loaded', array( 'GF_Bitpay_Bootstrap', 'load' ), 5 );
 
+class GF_Bitpay_Bootstrap {
+
+    public static function load() {
+
+        if ( ! method_exists( 'GFForms', 'include_addon_framework' ) ) {
+            return;
+        }
+
+        require_once( 'class.GFBitPayPlugin.php' );
+
+        GFAddOn::register( 'GFBitPayPlugin' );
+    }
+
+}
+
+function gf_bitpay() {
+    return GFBitPayPlugin::get_Instance();
+}
 // instantiate the plug-in
-GFBitPayPlugin::getInstance();
 
 add_action('wp_ajax_bitpay_pair_code', 'ajax_bitpay_pair_code');
 add_action('wp_ajax_bitpay_revoke_token', 'ajax_bitpay_revoke_token');
@@ -293,7 +311,7 @@ function pairing($pairing_code, $client, $sin)
         throw $e;
     }
 }
-
+  
 /**
  * Save the previously generated keys.
  */
